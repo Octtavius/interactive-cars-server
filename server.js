@@ -107,36 +107,21 @@ io.on('connection', function(socket){
     console.log('a user connected: ' + socket.id);
 
     socket.on("notify:accepted", function (data) {
-        console.log("******************************")
-        console.log(data.socketId)
-        console.log(data.staffEmail)
+        // console.log("******************************")
+        // console.log(data.socketId)
+        // console.log(data.staffEmail)
         Request.findOne({socketId: data.socket}, function (err, request) {
-            
             console.log(request);
             console.log(request.length);
             console.log("heheheheh")
-            
-
-                request.staffEmail = data.staffEmail
-
-                    request.staffAcceptedRequest = true;
-                    request.save(function (err) {
-                        if(err) throw err;
-                        console.log("requests updated successfully");
-                    })
-
-                
-                
+            request.staffEmail = data.staffEmail
+                request.staffAcceptedRequest = true;
+                request.save(function (err) {
+                    if(err) throw err;
+                    console.log("requests updated successfully");
+                })
             })
-            
-            // request.staffAcceptedRequest = true;
-            // request.save(function (err) {
-            //     if(err) throw err;
-            //     console.log("requests updated successfully");
-            // })
-        
-        console.log("******************************")
-        io.to(data.socketId).emit("staff:accepted:request")
+        io.to(data.socket).emit("staff:accepted:request")
     });
 
     socket.on("met:assistant", function () {
@@ -151,7 +136,6 @@ io.on('connection', function(socket){
         })
         io.emit("client:met", socket.id)
     });
-
 
     socket.on("notify:canceled", function (clientId) {
         console.log("notify client that staff canceld the rquests");
@@ -181,17 +165,17 @@ io.on('connection', function(socket){
 
     //client cancels the requests
     socket.on('client:cancel:request', function () {
-        // console.log("client canceled request: ");
-        // io.emit("client:send:cancel", socket.id);
-        // Request.findOne({socketId: socket.id}, function (err, request) {
-        //     request.canceledByUser = true;
-        //     console.log(request);
-        //     request.save(function (err) {
-        //         if(err) throw err;
-        //         console.log("requests updated successfully");
-        //         // socket.disconnect()
-        //     })
-        // })
+        console.log("client canceled request: ");
+        io.emit("client:send:cancel", socket.id);
+        Request.findOne({socketId: socket.id}, function (err, request) {
+            request.canceledByUser = true;
+            console.log(request);
+            request.save(function (err) {
+                if(err) throw err;
+                console.log("requests updated successfully");
+                // socket.disconnect()
+            })
+        })
     });
 
     //client sent request
@@ -228,7 +212,7 @@ io.on('connection', function(socket){
 
     socket.on('disconnect', function(){
       io.emit("client:disconnected", socket.id)
-        console.log('user disconnected');
+        console.log('user disconnected: ' + socket.id);
     });
 });
 
