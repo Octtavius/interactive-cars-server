@@ -8,7 +8,14 @@ router.get('/', function (req, res) {
 });
 
 router.get('/allRequests', function(req, res) {
-    var query = {$or:[{assistanceProvided: false},{staffCanceled:false}]}
+    var query = {
+        $and: [
+            {requestedOn: new Date("2017-05-18")}
+            // {staffCanceled:false},
+            // {assistanceProvided: false},
+            // {canceledByUser: false}
+            ]
+            }
     Request.find(query, function (err, requests) {
         if(err) throw err;
         

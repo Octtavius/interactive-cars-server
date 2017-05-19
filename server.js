@@ -159,7 +159,7 @@ io.on('connection', function(socket){
                 if(err) throw err;
                 console.log("requests updated successfully");
             })
-        })
+        });
         io.to(clientId).emit("staff:reply")
     });
 

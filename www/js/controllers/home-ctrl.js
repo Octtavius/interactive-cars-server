@@ -9,9 +9,6 @@
         officeList.check();
        $scope.title = "Home Page";
        $scope.loginSuccess = false;
-
-
-
         // $scope.admin = {
         //     email: 'test@mail.ru',
         //     password: "mypass777"
@@ -53,8 +50,6 @@
         //     // document.getElementById("demo2").innerHTML = decrypted;
         //     // document.getElementById("demo3").innerHTML = decrypted.toString(CryptoJS.enc.Utf8);
         // }
-
-
     };
 
     app.controller('HomeCtrl', HomeController);
