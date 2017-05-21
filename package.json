@@ -25,5 +25,16 @@
     "serve-favicon": "^2.4.2",
     "socket.io": "^1.7.3",
     "superlogin": "^0.6.1"
+  },
+  "scripts": {
+    "test": "mocha test/**/*.js"
+  },
+  "devDependencies": {
+    "assert": "^1.4.1",
+    "child_process": "^1.0.2",
+    "gulp": "^3.9.1",
+    "gulp-nodemon": "^2.2.1",
+    "mocha": "^3.4.1",
+    "nodemon": "^1.11.0"
   }
 }
