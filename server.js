@@ -99,13 +99,35 @@ app.use('/', Routes);
 
 require('./config/passport')(passport);
 
-var userSockets = {};
-
 var Request = require('./models/request');
+var socketStorage = require('./modules/SocketStorage');
+var dbManager = require('./modules/DBManager');
 
 io.on('connection', function(socket){
     console.log('a user connected: ' + socket.id);
+    socketStorage.addSocket(socket.id);
+    socketStorage.displayAll();
 
+    // console.log(SocketStorage.hello());
+    // // console.log(Object.keys(io)[0]);
+    // // console.log(Object.keys(io)[1]);
+    // // console.log(Object.keys(io)[2]);
+    // // console.log(Object.keys(io)[3]);
+    // // console.log(Object.keys(io)[4]);
+    // // console.log(Object.keys(io)[5]);
+    // // console.log(Object.keys(io)[6]);
+    // // console.log("===============================");
+    // // console.log("*******************************************");
+    // // console.log(socket.connected);
+    // // console.log(io.sockets.sockets[socket.id].connected);
+    // // console.log(io.sockets.sockets['DeP2U_2ebNbQ9gyeAAAA'].connected);
+    // // console.log(io.sockets.sockets[socket.id]);
+    // // console.log("*******************************************");
+    // // console.log("*******************************************");
+    // // console.log(io.sockets.sockets);
+    // // console.log("===============================");
+    // // console.log("===============================");
+    // // // console.log(io);
     socket.on("notify:accepted", function (data) {
         // console.log("******************************")
         // console.log(data.socketId)
@@ -159,7 +181,8 @@ io.on('connection', function(socket){
                 if(err) throw err;
                 console.log("requests updated successfully");
             })
-        })
+
+        });
         io.to(clientId).emit("staff:reply")
     });
 
@@ -196,6 +219,8 @@ io.on('connection', function(socket){
         })
 
         io.emit('request', data);
+
+        // socketStorage.recordRequest(socket.id)
     });
 
     socket.on('notifyOf:arrival', function(clientId){
@@ -206,13 +231,14 @@ io.on('connection', function(socket){
                 if(err) throw err;
                 console.log("requests updated successfully");
             })
-        })
+        });
         io.to(clientId).emit("staff:arrived")
     });
 
     socket.on('disconnect', function(){
-      io.emit("client:disconnected", socket.id)
-        console.log('user disconnected: ' + socket.id);
+      io.emit("client:disconnected", socket.id);
+        socketStorage.removeSocket(socket.id);
+        // dbManager.setClientCanceledByUser(socket.id, !socket.connected)
     });
 });
 

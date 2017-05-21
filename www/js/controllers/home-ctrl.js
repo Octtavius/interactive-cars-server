@@ -4,7 +4,7 @@
      */
     var app = angular.module('serverApp');
 
-    var HomeController = function ($scope, officeList, $http, $rootScope, $location) {
+    var HomeController = function ($scope, officeList) {
 
         officeList.check();
        $scope.title = "Home Page";

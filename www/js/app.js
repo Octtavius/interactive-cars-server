@@ -18,6 +18,7 @@
                         }
                     }
                 }
+
             })
             .when("/login", {
                 templateUrl: "templates/login-page.html",
