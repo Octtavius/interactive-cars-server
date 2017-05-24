@@ -234,6 +234,15 @@ io.on('connection', function(socket){
         io.to(clientId).emit("staff:arrived")
     });
 
+    //notiy staff that app is in background, and user might not care about getting response
+    socket.on('notification:from:client:app:paused', function(){
+        console.log("client paused the app");
+
+        io.emit('client:paused:app', socket.id);
+
+        // socketStorage.recordRequest(socket.id)
+    });
+
     socket.on('disconnect', function(){
       io.emit("client:disconnected", socket.id);
         socketStorage.removeSocket(socket.id);

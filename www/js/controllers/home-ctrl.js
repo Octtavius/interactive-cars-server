@@ -59,6 +59,17 @@
             restrict: "E",
             templateUrl: "templates/requestList.html",
             controller: function ($scope, $rootScope) {
+
+                var resetRequest = function (clientId) {
+                    for (var i = 0; i < $scope.assistanceRequests.length; i++) {
+                        var req = $scope.assistanceRequests[i];
+
+                        if( req.carId !== clientId) {
+                            req.accepted = false;
+                        }
+                    }
+                }
+
                 //this is the socket.io will use for listening and emiting
                 // var ss = SocketService.socket();
                 var Button = function (carId, carName) {
@@ -107,7 +118,7 @@
                 $scope.acceptRequest = function (req, index) {
                     console.log("userL " + $rootScope.user.local.email);
                     req.accepted = true;
-                    var dataBack = {socket: req.socketId, staffEmail: $rootScope.user.local.email}
+                    var dataBack = {socket: req.socketId, staffEmail: $rootScope.user.local.email};
                     SocketService.emit("notify:accepted", dataBack);
 
                     for (var i = 0; i < $scope.assistanceRequests.length; i++) {
@@ -128,7 +139,6 @@
                         }
                     }
                 };
-
 
                 $scope.finishRequest = function (req) {
                     for (var i = 0; i < $scope.assistanceRequests.length; i++) {
@@ -169,6 +179,12 @@
                 SocketService.on("client:disconnected", function (clientId) {
                     console.log("client disconnected:  " + clientId)
                     onClientCanceled(clientId)
+                });
+
+                //listen for request, and add it to the list
+                SocketService.on("client:paused:app", function (clientId) {
+                    console.log("client paused:  " + clientId);
+                    resetRequest(clientId)
                 });
 
                 //when client canceed assistance request
