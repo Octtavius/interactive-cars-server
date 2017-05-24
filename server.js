@@ -19,7 +19,7 @@ var flash = require('connect-flash');
 var session = require('express-session');
 
 var configDB = require('./config/database.js');
-mongoose.connect(process.env.MONGODB_URI || configDB.url);
+mongoose.connect(process.env.MONGOLAB_URI || process.env.MONGODB_URI || process.env.MONGOLAB_SILVER_URI || configDB.url);
 
 // //++++++++++++++++++++++++++++++++++++++++++++++++++
 // //++++++++++++++++++++++++++++++++++++++++++++++++++
